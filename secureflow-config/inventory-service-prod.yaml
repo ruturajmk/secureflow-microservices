@@ -1,0 +1,19 @@
+spring:
+  kafka:
+    bootstrap-servers: kafka1.company.com:9092,kafka2.company.com:9092
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: https://auth.company.com/oauth2/jwks
+
+eureka:
+  client:
+    service-url:
+      defaultZone: https://eureka.company.com/eureka
+
+management:
+  zipkin:
+    tracing:
+      endpoint: https://zipkin.company.com/api/v2/spans

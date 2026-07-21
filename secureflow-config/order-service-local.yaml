@@ -1,0 +1,96 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
+      
+    consumer:
+      group-id: order-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+
+      properties:
+        spring.json.trusted.packages: "*"
+        spring.json.value.default.type: com.secureflow.orderservice.event.PaymentRefundedEvent
+        spring.json.use.type.headers: false
+
+  config:
+    import:
+      - optional:classpath:/
+      - optional:file:order-service-resilience.yaml        
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: http://localhost:9000/oauth2/jwks
+          
+          
+  cloud:
+    openfeign:
+      micrometer:
+        enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+      
+  instance:
+    prefer-ip-address: false
+    hostname: localhost
+    instance-id: ${spring.application.name}:${server.port}
+
+management:
+
+  tracing:
+    sampling:
+      probability: 1.0
+
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+      
+      
+resilience4j:
+
+  circuitbreaker:
+    instances:
+      productService:
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 20s
+        permittedNumberOfCallsInHalfOpenState: 2
+
+  retry:
+    instances:
+      productService:
+        maxAttempts: 3
+        waitDuration: 2s
+        retry-exceptions:
+          - feign.RetryableException
+
+  timelimiter:
+    instances:
+      productService:
+        timeoutDuration: 2s
+        
+  bulkhead:
+    instances:
+      productService:
+        maxConcurrentCalls: 2
+        maxWaitDuration: 0
+        
+  ratelimiter:
+    instances:
+      productService:
+        limitForPeriod: 3
+        limitRefreshPeriod: 10s
+        timeoutDuration: 0
+        
+        

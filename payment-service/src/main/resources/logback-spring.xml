@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+
+	<springProperty
+			scope="context"
+			name="applicationName"
+			source="spring.application.name"
+			defaultValue="unknown-service"/>
+
+	<!-- Keep normal Docker console logging -->
+	<appender name="CONSOLE"
+	          class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>
+				%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [${applicationName}] [TRACE=%X{traceId:-}] [SPAN=%X{spanId:-}] [USER=%X{user:-}] %logger{36} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+	<!-- Send structured JSON logs to Logstash -->
+	<appender name="LOGSTASH"
+	          class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+
+		<destination>logstash:5000</destination>
+
+		<encoder class="net.logstash.logback.encoder.LogstashEncoder">
+
+			<customFields>
+				{"service":"${applicationName}"}
+			</customFields>
+
+			<includeMdc>true</includeMdc>
+
+		</encoder>
+
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="CONSOLE"/>
+		<appender-ref ref="LOGSTASH"/>
+	</root>
+
+</configuration>

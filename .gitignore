@@ -29,3 +29,15 @@ logs/
 
 # Temporary files
 *.tmp
+
+# Spring Boot extracted JAR content
+**/BOOT-INF/
+**/META-INF/
+
+# Debug / diagnostic output
+**/beans.json
+**/env.json
+**/mappings.json
+**/gateway-config.json
+**/dependency-tree.txt
+**/contents.txt

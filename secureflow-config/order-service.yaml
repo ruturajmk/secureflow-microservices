@@ -1,0 +1,37 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: order-service
+
+  datasource:
+    url: jdbc:mysql://mysql:3306/orderdb
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    show-sql: true
+
+    properties:
+      hibernate:
+        format_sql: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+logging:
+  level:
+    root: INFO
+    com.secureflow: INFO
+    org.springframework: INFO
+    org.springframework.security: INFO
+    org.springframework.kafka: INFO
+    org.apache.kafka: WARN
+    org.hibernate: WARN

@@ -1,0 +1,21 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+
+  profiles:
+    active: native
+
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: ${CONFIG_REPO:file:///C:/Users/rutur/workspace/secureflow-config}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
