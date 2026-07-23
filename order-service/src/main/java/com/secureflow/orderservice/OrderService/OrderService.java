@@ -1,7 +1,7 @@
 package com.secureflow.orderservice.OrderService;
 
 import com.secureflow.orderservice.client.InventoryClient;
-import com.secureflow.orderservice.client.ProductClient;
+import com.secureflow.orderservice.service.ProductService;
 import com.secureflow.orderservice.dto.CreateOrderRequest;
 import com.secureflow.orderservice.dto.InventoryResponse;
 import com.secureflow.orderservice.dto.OrderResponse;
@@ -20,20 +20,20 @@ import java.time.LocalDateTime;
 public class OrderService {
 
     private final OrderRepository repository;
-    private final ProductClient productClient;
+    private final ProductService productService;
     private final InventoryClient inventoryClient;
     private final OrderEventProducer orderEventProducer;
 
     public OrderService(
-            OrderRepository repository,
-            ProductClient productClient,
-            InventoryClient inventoryClient,
-            OrderEventProducer orderEventProducer) {
+        OrderRepository repository,
+        ProductService productService,
+        InventoryClient inventoryClient,
+        OrderEventProducer orderEventProducer) {
 
-        this.repository = repository;
-        this.productClient = productClient;
-        this.inventoryClient = inventoryClient;
-        this.orderEventProducer = orderEventProducer;
+    	this.repository = repository;
+    	this.productService = productService;
+   	this.inventoryClient = inventoryClient;
+    	this.orderEventProducer = orderEventProducer;
     }
 
     public OrderResponse createOrder(
@@ -62,25 +62,8 @@ public class OrderService {
          * STEP 2:
          * Validate product by calling Product Service.
          */
-        Product product;
-
-        try {
-            product = productClient.getProductById(
-                    request.getProductId()
-            );
-        } catch (FeignException.NotFound ex) {
-
-            throw new IllegalArgumentException(
-                    "Product not found: "
-                            + request.getProductId()
-            );
-        } catch (FeignException ex) {
-
-            throw new RuntimeException(
-                    "Unable to communicate with Product Service",
-                    ex
-            );
-        }
+        Product product = productService.getProduct(
+        request.getProductId());
 
         /*
          * STEP 3:

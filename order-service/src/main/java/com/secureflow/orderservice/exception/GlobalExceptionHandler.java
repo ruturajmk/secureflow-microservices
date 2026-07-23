@@ -48,4 +48,22 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.CONFLICT)
                 .body(response);
     }
+
+@ExceptionHandler(ProductServiceUnavailableException.class)
+public ResponseEntity<Map<String, Object>> handleProductServiceUnavailable(
+        ProductServiceUnavailableException ex,
+        HttpServletRequest request) {
+
+    Map<String, Object> response = new LinkedHashMap<>();
+
+    response.put("timestamp", LocalDateTime.now());
+    response.put("status", HttpStatus.SERVICE_UNAVAILABLE.value());
+    response.put("error", "SERVICE_UNAVAILABLE");
+    response.put("message", ex.getMessage());
+    response.put("path", request.getRequestURI());
+
+    return ResponseEntity
+            .status(HttpStatus.SERVICE_UNAVAILABLE)
+            .body(response);
+}
 }

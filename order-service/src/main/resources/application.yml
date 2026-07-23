@@ -14,4 +14,21 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+resilience4j:
+  bulkhead:
+    instances:
+      productService:
+        max-concurrent-calls: 2
+        max-wait-duration: 0
+
+  ratelimiter:
+    instances:
+      productService:
+        limit-for-period: 5
+        limit-refresh-period: 10s
+        timeout-duration: 0
+
+ 
+
+
 
