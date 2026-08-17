@@ -1,17 +1,12 @@
 spring:
-
   security:
     oauth2:
       authorizationserver:
-        issuer: http://auth-server:9000
-        
-auth:
-  issuer: http://localhost:9000
+        issuer: http://localhost:9000
 
 eureka:
   client:
-    service-url:
-      defaultZone: http://service-registry:8761/eureka
+    enabled: false
 
 management:
   zipkin:

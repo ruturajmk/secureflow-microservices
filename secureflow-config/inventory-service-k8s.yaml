@@ -1,6 +1,6 @@
 spring:
   kafka:
-    bootstrap-servers: kafka:9092
+    bootstrap-servers: kafka-kafka:9092
 
   security:
     oauth2:
@@ -10,8 +10,14 @@ spring:
 
 eureka:
   client:
+    enabled: false
     service-url:
       defaultZone: http://service-registry:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+  instance:
+    prefer-ip-address: true
 
 management:
   zipkin:

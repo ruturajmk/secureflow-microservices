@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logstash
+  namespace: secureflow
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logstash
+  template:
+    metadata:
+      labels:
+        app: logstash
+    spec:
+      containers:
+      - name: logstash
+        image: docker.elastic.co/logstash/logstash:8.15.3
+
+        ports:
+        - containerPort: 5000
+
+        env:
+        - name: LS_JAVA_OPTS
+          value: "-Xms256m -Xmx256m"
+
+        volumeMounts:
+        - name: pipeline
+          mountPath: /usr/share/logstash/pipeline
+
+      volumes:
+      - name: pipeline
+        configMap:
+          name: logstash-pipeline

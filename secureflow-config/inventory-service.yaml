@@ -4,10 +4,12 @@ server:
 spring:
   application:
     name: inventory-service
+
   datasource:
     url: jdbc:mysql://mysql:3306/inventorydb
-    username: root
-    password: root
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: update

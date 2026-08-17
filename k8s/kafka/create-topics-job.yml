@@ -1,0 +1,37 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: kafka-create-topics
+  namespace: secureflow
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+
+      containers:
+        - name: kafka-topic-creator
+          image: docker.io/apache/kafka:4.3.0
+
+          command:
+            - /bin/sh
+            - -c
+            - |
+              echo "Waiting for Kafka..."
+              sleep 20
+
+              TOPICS="order-created inventory-reserved payment-completed payment-failed notification-request"
+
+              for topic in $TOPICS
+              do
+                echo "Creating topic: $topic"
+
+                /opt/kafka/bin/kafka-topics.sh \
+                  --bootstrap-server kafka-kafka:9092 \
+                  --create \
+                  --if-not-exists \
+                  --topic $topic \
+                  --partitions 3 \
+                  --replication-factor 1
+              done
+
+              echo "All topics created successfully."

@@ -41,3 +41,4 @@ logs/
 **/gateway-config.json
 **/dependency-tree.txt
 **/contents.txt
+k8s/mysql/secret.yml

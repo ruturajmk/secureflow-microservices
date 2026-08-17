@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: config-server
+  namespace: secureflow
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: config-server
+
+  template:
+    metadata:
+      labels:
+        app: config-server
+
+    spec:
+      containers:
+        - name: config-server
+
+          image: secureflow/config-server:1.0
+
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8888
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: "native,k8s"
+
+            - name: CONFIG_REPO
+              value: "file:///config-repo"
+
+          volumeMounts:
+            - name: config-volume
+              mountPath: /config-repo
+
+      volumes:
+        - name: config-volume
+          configMap:
+            name: secureflow-config

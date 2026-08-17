@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: service-registry
+  namespace: secureflow
+  labels:
+    app: service-registry
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: service-registry
+
+  template:
+    metadata:
+      labels:
+        app: service-registry
+
+    spec:
+      containers:
+        - name: service-registry
+
+          image: secureflow/service-registry:1.0
+
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8761
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+
+            - name: CONFIG_SERVER
+              value: http://config-server:8888

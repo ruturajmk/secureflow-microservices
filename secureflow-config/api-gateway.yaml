@@ -12,7 +12,6 @@ spring:
           enabled: true
 
       routes:
-
         - id: user-service
           uri: lb://user-service
           predicates:
@@ -20,7 +19,7 @@ spring:
           filters:
             - SaveSession
             - TokenRelay
-         
+
         - id: product-service
           uri: lb://product-service
           predicates:
@@ -28,7 +27,7 @@ spring:
           filters:
             - SaveSession
             - TokenRelay
-            
+
         - id: inventory-service
           uri: lb://inventory-service
           predicates:
@@ -49,6 +48,7 @@ management:
   endpoint:
     gateway:
       enabled: true
+
   endpoints:
     web:
       exposure:
@@ -59,4 +59,3 @@ logging:
     org.springframework.security.oauth2.client: TRACE
     org.springframework.security.oauth2.client.web.server: TRACE
     org.springframework.cloud.gateway.filter.factory.TokenRelayGatewayFilterFactory: TRACE
-    

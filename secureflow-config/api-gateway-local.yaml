@@ -6,7 +6,7 @@ spring:
           gateway:
             provider: auth-server
             client-id: gateway-client
-            client-secret: gateway-secret
+            client-secret: ${GATEWAY_CLIENT_SECRET}
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
 

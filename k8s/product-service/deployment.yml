@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: product-service
+  namespace: secureflow
+  labels:
+    app: product-service
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: product-service
+
+  template:
+    metadata:
+      labels:
+        app: product-service
+
+    spec:
+      containers:
+        - name: product-service
+
+          image: secureflow/product-service:1.0
+
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 8082
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+
+            - name: CONFIG_SERVER
+              value: http://config-server:8888

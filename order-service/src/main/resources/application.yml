@@ -5,6 +5,21 @@ spring:
   config:
     import: optional:configserver:${CONFIG_SERVER:http://localhost:8888}
 
+    kafka:
+    bootstrap-servers: kafka-kafka:9092
+
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+      properties:
+        spring.json.add.type.headers: false
+
+app:
+  kafka:
+    topics:
+      order-created: order-created
+
 eureka:
   instance:
     hostname: localhost
@@ -28,7 +43,7 @@ resilience4j:
         limit-refresh-period: 10s
         timeout-duration: 0
 
- 
+
 
 
 

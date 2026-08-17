@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: auth-server
+  namespace: secureflow
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: auth-server
+
+  template:
+    metadata:
+      labels:
+        app: auth-server
+
+    spec:
+      containers:
+        - name: auth-server
+
+          image: secureflow/auth-server:latest
+
+          imagePullPolicy: IfNotPresent
+
+          ports:
+            - containerPort: 9000
+
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+
+            - name: CONFIG_SERVER
+              value: http://config-server:8888

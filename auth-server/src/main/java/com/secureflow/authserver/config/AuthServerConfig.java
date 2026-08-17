@@ -35,6 +35,7 @@ import org.springframework.security.web.authentication.LoginUrlAuthenticationEnt
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.beans.factory.annotation.Value;
 
+
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -85,29 +86,26 @@ public class AuthServerConfig {
 
     // ── Registered clients (apps allowed to use this auth server) ─
     @Bean
-    public RegisteredClientRepository registeredClientRepository(PasswordEncoder encoder) {
+public RegisteredClientRepository registeredClientRepository(
+        PasswordEncoder encoder,
+        @Value("${gateway.client-secret}") String gatewayClientSecret) {
 
-        RegisteredClient gatewayClient = RegisteredClient
-                .withId(UUID.randomUUID().toString())
-                .clientId("gateway-client")
-                .clientSecret(encoder.encode("gateway-secret"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-
-                // API Gateway OAuth2 login callback
-                .redirectUri("http://localhost:8080/login/oauth2/code/gateway")
-
-                // Postman OAuth2 callback
-                .redirectUri("https://oauth.pstmn.io/v1/callback")
-
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .scope("read")
-                .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(false)
-                        .build())
-                .build();
+    RegisteredClient gatewayClient = RegisteredClient
+            .withId(UUID.randomUUID().toString())
+            .clientId("gateway-client")
+            .clientSecret(encoder.encode(gatewayClientSecret))
+            .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+            .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+            .redirectUri("http://localhost:8080/login/oauth2/code/gateway")
+            .redirectUri("https://oauth.pstmn.io/v1/callback")
+            .scope(OidcScopes.OPENID)
+            .scope(OidcScopes.PROFILE)
+            .scope("read")
+            .clientSettings(ClientSettings.builder()
+                    .requireAuthorizationConsent(false)
+                    .build())
+            .build();
 
         return new InMemoryRegisteredClientRepository(gatewayClient);
     }

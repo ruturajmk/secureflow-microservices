@@ -5,6 +5,9 @@ spring:
   application:
     name: auth-server
 
+gateway:
+  client-secret: ${GATEWAY_CLIENT_SECRET}
+
 management:
   endpoints:
     web:

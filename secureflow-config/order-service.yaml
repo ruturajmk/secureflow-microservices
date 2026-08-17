@@ -6,9 +6,9 @@ spring:
     name: order-service
 
   datasource:
-    url: jdbc:mysql://mysql:3306/orderdb
-    username: root
-    password: root
+    url: jdbc:mysql://mysql:3306/secureflow
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
